@@ -7,6 +7,8 @@ import mxnet as mx
 # read settings
 from helper.config import config
 
+
+# data iterator
 class NUSLoader(mx.io.DataIter):
 	def __init__(self,sym,NUSdb):
 		super(NUSLoader, self).__init__()
@@ -35,11 +37,11 @@ class NUSLoader(mx.io.DataIter):
 
 	def next(self):
 		if self.iter_next():
-			self.get_bath()
+			self.get_batch()
 			self.cur += self.batch_size
 			# return a data batch
-			return mx.io.DataBatch(data=_,label=_,
-									pad=_,index=_,
+			return mx.io.DataBatch(data=self.data,label=self.label,
+									pad=self.getpad(),index=self.getindex(),
 									provide_data = self.provide_data,
 									provide_label = self.provide_label)
 		else 
@@ -57,6 +59,10 @@ class NUSLoader(mx.io.DataIter):
 			return 0
 
 	def get_batch(self):
+		# assigin to self.data and self.label
+		# pass it to mx.io.DataBatch()
+		"""
+		"""
 		# provide data
 		cur_from = self.cur
         cur_to = min(cur_from + self.batch_size, self.size)
@@ -100,4 +106,6 @@ class NUSLoader(mx.io.DataIter):
 	  	all_label = dict()
 	  	all_label['label'] = tensor_vstack([batch['label'] for batch in new_label_list], pad=-1)
 
+		self.data = [mx.nd.array(all_data['data'])]
+		self.label = [mx.nd.array(all_label['label'])]
 
