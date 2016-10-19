@@ -1,6 +1,61 @@
+#!/usr/bin/env
+# -*- coding: utf-8 -*-
+
 import cv2
 import numpy as np
 
+
+"""
+图像的预处理工作
+1. resize
+2. 去均值
+3. 填充至统一大小
+"""
+
+
+
+
+
+
+def resize(im, target_size, max_size):
+    """
+    only resize input image to target size and return scale
+    :param im: BGR image input by opencv
+    :param target_size: one dimensional size (the short side)
+    :param max_size: one dimensional max size (the long side)
+    :return:
+    """
+    im_shape = im.shape
+    im_size_min = np.min(im_shape[0:2])
+    im_size_max = np.max(im_shape[0:2])
+    im_scale = float(target_size) / float(im_size_min)
+    # prevent bigger axis from being more than max_size:
+    if np.round(im_scale * im_size_max) > max_size:
+        im_scale = float(max_size) / float(im_size_max)
+    im = cv2.resize(im, None, None, fx=im_scale, fy=im_scale, interpolation=cv2.INTER_LINEAR)
+    return im, im_scale
+
+
+
+def transform(im, pixel_means):
+    """
+    transform into mxnet tensor
+    substract pixel size and transform to correct format
+    :param im: [height, width, channel] in BGR
+    :param pixel_means: [[[R, G, B pixel means]]]
+    :return: [batch, channel, height, width]
+    """
+    im = im.copy()
+    # reverse channel
+    # BGR -> RGB
+    im[:, :, (0, 1, 2)] = im[:, :, (2, 1, 0)]
+    im = im.astype(float)
+    im -= pixel_means
+    im_tensor = im[np.newaxis, :]
+    # put channel first
+    channel_swap = (0, 3, 1, 2)
+    im_tensor = im_tensor.transpose(channel_swap)
+    return im_tensor
 
 
 

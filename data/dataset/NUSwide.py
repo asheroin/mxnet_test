@@ -4,11 +4,16 @@ import cPickle
 from helper.config import config
 import re
 
+
+import pdb
+
+
 class NUSwide():
 	def __init__(self,img_path,root_path):
 		pass
 		self.name = ''
-		self.cache_path = os.path.join(os.getcwd(),'cache_files')
+		self.root_path = root_path
+		self.cache_path = os.path.join(root_path,'cache_files')
 
 		# type(image_set) = type('list')
 		self.image_set = self.load_image_set_index()
@@ -25,24 +30,35 @@ class NUSwide():
 		# 	return image_set
 
 		image_set = []
-		for line in fid.readlines():
+		class2id = {}
+		for index,line in enumerate(fid.readlines()):
 			str_ = line.split('\\')
 			class_ = str_[0]
+			class2id[class_] = 0
 			dir_ = str_[1].split('\n')[0]
-			image_set.append({'class':class_,'dir':dir_})
+
+			image_set.append({'class':class_,'dir':dir_,'index':index,'index_of_class':dir_.split('_')[0]})
 		pass
+		pdb.set_trace()
+		
+		for index,value in enumerate(class2id):
+			class2id[value] = index
+
+		for item in image_set:
+			item['classId']=class2id[item['class']]
 
 		with open(cache_file,'wb') as fid:
 			# HIGHEST_PROTOCOL ???????
 			cPickle.dump(image_set,fid,cPickle.HIGHEST_PROTOCOL)
 		print 'wrote db to binary files'
+
 		return image_set
 
 
 
-	def load_annotation(index):
+	def load_annotation(self,item):
 		# a simple way
-		return index['class'],index['dir']
+		return {'class':item['class'],'classId':item['classId'],'index':item['index'],'index_of_class':item['index_of_class'],'dir':item['dir'],'file_path':os.path.join(config.PATH,item['class'],item['dir'])}
 	def get_db(self):
 		"""
 		write something here for a better reading
@@ -55,7 +71,7 @@ class NUSwide():
 		# 	print 'load form exists file'
 		# 	return nusdb
 			
-		get_db = [self.load_annotation(index) for index in self.image_index]
+		get_db = [self.load_annotation(item) for item in self.image_set]
 		with open(cache_file,'wb') as fid:
 			# HIGHEST_PROTOCOL ???????
 			cPickle.dump(get_db,fid,cPickle.HIGHEST_PROTOCOL)

@@ -1,0 +1,6 @@
+# ignore itself
+.gitignore
+
+cache_files/
+*.pyc
+*.pkl

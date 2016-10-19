@@ -1,3 +1,6 @@
+#!/usr/bin/env
+# -*- coding: utf-8 -*-
+
 
 import cv2
 import numpy.random as npr
@@ -24,16 +27,26 @@ def get_minibatch(db):
 	# ......
 	data = {'data':im_array}
 	# label = {'label':labels_array}
-	label = {}
+	label = get_image_label_batch(db)
+	label = {'label':np.vstack(label)}
 	return data, label
 
+
+def get_image_label_batch(db):
+	num_images = len(db)
+	labels = []
+	for i in range(num_images):
+		labels.append(db[i]['classId'])
+	return labels
 
 def get_image_array_batch(db, scales, scale_indexes):
 	num_images = len(db)
 	processed_ims = []
 	im_scales = []
 	for i in range(num_images):
-		im = cv2.read(db[i]['img_dir'])
+		im = cv2.imread(db[i]['file_path'])
+		# im.shape = [height, width, channel]
+		# channel in BGR
 		# target_size = scales[scale_indexes[i]]
 		# since it always be a fixed value in this case
 		target_size = config.SCALES[0]
