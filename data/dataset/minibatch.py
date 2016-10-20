@@ -15,7 +15,8 @@ from helper.config import config
 
 
 
-
+# get mini-batch data
+# generally, returns images array and labels array in dict, with value in type of numpy.array
 
 
 def get_minibatch(db):
@@ -45,6 +46,9 @@ def get_image_array_batch(db, scales, scale_indexes):
 	im_scales = []
 	for i in range(num_images):
 		im = cv2.imread(db[i]['file_path'])
+		"""
+		image pre-process
+		"""
 		# im.shape = [height, width, channel]
 		# channel in BGR
 		# target_size = scales[scale_indexes[i]]
@@ -52,6 +56,9 @@ def get_image_array_batch(db, scales, scale_indexes):
 		target_size = config.SCALES[0]
 		im, im_scale = image_processing.resize(im,target_size,config.MAX_SIZE)
 		im_tensor = image_processing.transform(im,config.PIXEL_MEANS)
+		"""
+		processed images -> list --vstack--> numpy.array
+		"""
 		processed_ims.append(im_tensor)
 		im_scales.append(im_scale)
 	array = image_processing.tensor_vstack(processed_ims)

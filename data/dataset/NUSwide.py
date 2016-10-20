@@ -8,6 +8,8 @@ import re
 import pdb
 
 
+
+# class of database
 class NUSwide():
 	def __init__(self,img_path,root_path):
 		pass
