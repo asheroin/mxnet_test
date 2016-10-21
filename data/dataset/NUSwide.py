@@ -1,5 +1,5 @@
 import os
-import numpy as numpy
+import numpy as np
 import cPickle
 from helper.config import config
 import re
@@ -19,6 +19,9 @@ class NUSwide():
 
 		# type(image_set) = type('list')
 		self.image_set = self.load_image_set_index()
+		self.load_image_label_set_index()
+		# pdb.set_trace()
+
 	def load_image_set_index(self):
 		# set self.image_index
 		path = os.path.join(config.AnotationPath,'ImageList','ImageList.txt')
@@ -41,7 +44,7 @@ class NUSwide():
 
 			image_set.append({'class':class_,'dir':dir_,'index':index,'index_of_class':dir_.split('_')[0]})
 		pass
-		pdb.set_trace()
+		# pdb.set_trace()
 		
 		for index,value in enumerate(class2id):
 			class2id[value] = index
@@ -53,14 +56,22 @@ class NUSwide():
 			# HIGHEST_PROTOCOL ???????
 			cPickle.dump(image_set,fid,cPickle.HIGHEST_PROTOCOL)
 		print 'wrote db to binary files'
-
+		fid.close()
 		return image_set
 
+	def load_image_label_set_index(self):
+		fid = open(config.TagList,'r')
+		for index,line in enumerate(fid.readlines()):
+			line = line.split('\n')[0]
+			line = line.split(' ')[0:-1]
+			line = map(int,line)
+			self.image_set[index]['label'] = line
+		fid.close()
 
 
 	def load_annotation(self,item):
 		# a simple way
-		return {'class':item['class'],'classId':item['classId'],'index':item['index'],'index_of_class':item['index_of_class'],'dir':item['dir'],'file_path':os.path.join(config.PATH,item['class'],item['dir'])}
+		return {'label':item['label'],'class':item['class'],'classId':item['classId'],'index':item['index'],'index_of_class':item['index_of_class'],'dir':item['dir'],'file_path':os.path.join(config.PATH,item['class'],item['dir'])}
 	def get_db(self):
 		"""
 		write something here for a better reading

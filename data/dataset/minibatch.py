@@ -9,7 +9,7 @@ import numpy as np
 from helper import image_processing
 from helper.config import config
 
-
+import pdb
 
 
 
@@ -37,7 +37,7 @@ def get_image_label_batch(db):
 	num_images = len(db)
 	labels = []
 	for i in range(num_images):
-		labels.append(db[i]['classId'])
+		labels.append(db[i]['label'])
 	return labels
 
 def get_image_array_batch(db, scales, scale_indexes):

@@ -18,11 +18,13 @@ def train(image_set,root_path):
 	# data = mx.symbol.Variable(name="data")
 	symbol = get_vgg19_conv(mx.symbol.Variable(name="data"))
 	
-	# dataIter.get_batch()
+	
 
-	pst()
+	
     # build data interator
 	dataIter = NUSLoader(symbol,nusdb,ctx=None, work_load_list=None)
+	dataIter.get_batch()
+	pst()
     # infer max shape
 
     # load pretrained

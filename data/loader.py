@@ -9,7 +9,7 @@ from mxnet.executor_manager import _split_input_slice
 from helper.config import config
 from data.dataset import minibatch
 from helper.image_processing import tensor_vstack
-
+import pdb
 
 # data iterator
 class NUSLoader(mx.io.DataIter):
@@ -83,7 +83,7 @@ class NUSLoader(mx.io.DataIter):
 		ctx = self.ctx
 		work_load_list = self.work_load_list
 		if work_load_list is None:
-			work_load_list = [1] * len(ctx)
+			work_load_list = [2] * len(ctx)
 		assert isinstance(work_load_list, list) and len(work_load_list) == len(ctx), \
 		"Invalid settings for work load. "
 		# for multicore-cpu?
@@ -101,7 +101,8 @@ class NUSLoader(mx.io.DataIter):
 		data_tensor = tensor_vstack([batch['data'] for batch in data_list])
 		for data, data_pad in zip(data_list,data_tensor):
 			data['data'] = data_pad[np.newaxis,:]
-
+		
+		pdb.set_trace()
 		new_label_list = []
 		for data,label in zip(data_list,label_list):
 			# every working devices
