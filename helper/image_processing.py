@@ -59,7 +59,7 @@ def transform(im, pixel_means):
 
 
 
-def tensor_vstack(tensor_list, pad=0):
+def tensor_vstack(tensor_list, pad=0,stack = True):
     """
     vertically stack tensors
     :param tensor_list: list of tensor to be stacked vertically
@@ -81,5 +81,7 @@ def tensor_vstack(tensor_list, pad=0):
         for dim in range(1, ndim):
             pad_shape.append((0, dimensions[dim] - tensor.shape[dim]))
         tensor_list[ind] = np.lib.pad(tensor, pad_shape, 'constant', constant_values=pad)
+    if stack==False:
+        return tensor_list
     all_tensor = np.vstack(tensor_list)
     return all_tensor

@@ -23,14 +23,20 @@ def train(image_set,root_path):
 	
     # build data interator
 	dataIter = NUSLoader(symbol,nusdb,ctx=None, work_load_list=None)
-	dataIter.get_batch()
-	pst()
     # infer max shape
-
+    max_data_shape = [('data',(config.BATCH_SIZE,3,1000,1000))]
+    max_data_shape_dict = {k: v for k, v in max_data_shape}
+    max_label_shape = [('label',(config.BATCH_SIZE,81))]
+    print 'providing maximum shape',max_data_shape,max_label_shape
     # load pretrained
-
+    args, auxs = load_param(pretrained, epoch, convert=True)
     # initialize params
 
-    # prepare for train, such as setting metric
-
+	data_names = [k[0] for k in dataIter.provide_data]
+	label_names = [k[0] for k in dataIter.provide_label]
+    # prepare for train
+	batch_end_callback = Speedometer(train_data.batch_size, frequent=frequent)
+	epoch_end_callback = mx.callback.do_checkpoint(prefix)
+	# set metric
+	
     # train
