@@ -4,3 +4,5 @@
 cache_files/
 *.pyc
 *.pkl
+*.params
+*.json
