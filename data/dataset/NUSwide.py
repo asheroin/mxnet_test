@@ -28,11 +28,11 @@ class NUSwide():
 		fid = open(path,'r')
 
 		cache_file = os.path.join(self.cache_path,self.name + 'img_set.pkl')
-		# if os.path.exists(cache_file):
-		# 	with open(cache_file,'rb') as fid:
-		# 		image_set = cPickle.load(fid)
-		# 	print 'load form exists file'
-		# 	return image_set
+		if os.path.exists(cache_file):
+			with open(cache_file,'rb') as fid:
+				image_set = cPickle.load(fid)
+			print 'load form exists file'
+			return image_set
 
 		image_set = []
 		class2id = {}
@@ -78,11 +78,11 @@ class NUSwide():
 		another line
 		"""
 		cache_file = os.path.join(self.cache_path,self.name + 'nus_db.pkl')
-		# if os.path.exists(cache_file):
-		# 	with open(cache_file,'rb') as fid:
-		# 		nusdb = cPickle.load(fid)
-		# 	print 'load form exists file'
-		# 	return nusdb
+		if os.path.exists(cache_file):
+			with open(cache_file,'rb') as fid:
+				nusdb = cPickle.load(fid)
+			print 'load form exists file'
+			return nusdb
 			
 		get_db = [self.load_annotation(item) for item in self.image_set]
 		with open(cache_file,'wb') as fid:

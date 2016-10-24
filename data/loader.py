@@ -13,10 +13,10 @@ import pdb
 
 # data iterator
 class NUSLoader(mx.io.DataIter):
-	def __init__(self,sym,NUSdb,ctx=None, work_load_list=None):
+	def __init__(self,NUSdb,ctx=None, work_load_list=None):
 		super(NUSLoader, self).__init__()
 
-		self.sym = sym
+		# self.sym = sym
 		self.NUSdb = NUSdb
 		self.num_classes = 9
 		self.batch_size = config.BATCH_SIZE
@@ -30,13 +30,12 @@ class NUSLoader(mx.io.DataIter):
 
 	@property
 	def provide_data(self):
-		return [('data',[0,0,0])]
+		return [('data', self.data[0].shape)]
 
 	@property
 	def provide_label(self):
-		return [('label_1',shape1),
-				('label_2',shape2),
-				('label_3',shape3)]
+		# return [('label', self.label[0].shape)]
+		return []
 
 	def reset(self):
 		pass
@@ -65,7 +64,7 @@ class NUSLoader(mx.io.DataIter):
 
 	def getpad(self):
 		# check the broader
-		if self.cur+self.batch_size > size :
+		if self.cur+self.batch_size > self.size:
 			return self.cur + self.batch_size - self.size
 		else:
 			return 0
@@ -129,8 +128,9 @@ class NUSLoader(mx.io.DataIter):
 		# 	all_label[key] = tensor_vstack([batch[key] for batch in label_list])
 
 		all_label = dict()
-		all_label['label'] = tensor_vstack([batch['label'] for batch in new_label_list], pad=-1)
+		all_label['label'] = tensor_vstack([batch['label'] for batch in label_list], pad=-1)
 
 		self.data = [mx.nd.array(all_data['data'])]
-		self.label = [mx.nd.array(all_label['label'])]
+		# self.label = [mx.nd.array(all_label['label'])]
+		self.label = []
 

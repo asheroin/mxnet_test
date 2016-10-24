@@ -6,7 +6,7 @@ import mxnet as mx
 
 from helper.config import config
 from tools.train import train
-
+from tools.train import inference
 
 def parse_args():
 	parser = argparse.ArgumentParser(description='train on NUS-WIDE')
@@ -23,4 +23,5 @@ if __name__ =='__main__':
 	args = parse_args()
 	ctx = [mx.gpu(int(i)) for i in args.gpu_ids.split(',')]
 	print 'using image_set:',args.image_set
-	train(config.PATH,os.getcwd())
+	# train(config.PATH,os.getcwd())
+	inference(config.PATH,os.getcwd())
