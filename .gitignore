@@ -6,3 +6,4 @@ cache_files/
 *.pkl
 *.params
 *.json
+extrac/

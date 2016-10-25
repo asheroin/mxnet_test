@@ -24,4 +24,4 @@ if __name__ =='__main__':
 	ctx = [mx.gpu(int(i)) for i in args.gpu_ids.split(',')]
 	print 'using image_set:',args.image_set
 	# train(config.PATH,os.getcwd())
-	inference(config.PATH,os.getcwd())
+	inference(config.PATH,os.getcwd(),ctx=ctx)

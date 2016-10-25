@@ -3,7 +3,7 @@
 
 import cv2
 import numpy as np
-
+import pdb
 
 """
 图像的预处理工作
@@ -32,7 +32,9 @@ def resize(im, target_size, max_size):
     # prevent bigger axis from being more than max_size:
     if np.round(im_scale * im_size_max) > max_size:
         im_scale = float(max_size) / float(im_size_max)
-    im = cv2.resize(im, None, None, fx=im_scale, fy=im_scale, interpolation=cv2.INTER_LINEAR)
+
+    im = cv2.resize(im, None, None, fx=float(target_size) / float(im_shape[1]), fy=float(target_size) / float(im_shape[0]), interpolation=cv2.INTER_LINEAR)
+    # im = cv2.resize(im, None, None, fx=im_scale, fy=im_scale, interpolation=cv2.INTER_LINEAR)
     return im, im_scale
 
 

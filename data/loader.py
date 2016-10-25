@@ -31,11 +31,12 @@ class NUSLoader(mx.io.DataIter):
 	@property
 	def provide_data(self):
 		return [('data', self.data[0].shape)]
+		# return [('data',(config.BATCH_SIZE,3,1000,1000))]
 
 	@property
 	def provide_label(self):
 		# return [('label', self.label[0].shape)]
-		return []
+		return [('relu5_3',(config.BATCH_SIZE,512))]
 
 	def reset(self):
 		pass
@@ -44,7 +45,7 @@ class NUSLoader(mx.io.DataIter):
 		# bool function
 		# if ( self.cur + self.batch_sie ) <= ( self.size ) 
 		# return true
-		return self.cur + self.batch_size <= self.size
+		return (self.cur + self.batch_size) <= (self.size)
 
 	def next(self):
 		if self.iter_next():
@@ -82,7 +83,7 @@ class NUSLoader(mx.io.DataIter):
 		ctx = self.ctx
 		work_load_list = self.work_load_list
 		if work_load_list is None:
-			work_load_list = [2] * len(ctx)
+			work_load_list = [1] * len(ctx)
 		assert isinstance(work_load_list, list) and len(work_load_list) == len(ctx), \
 		"Invalid settings for work load. "
 		# for multicore-cpu?
@@ -131,6 +132,6 @@ class NUSLoader(mx.io.DataIter):
 		all_label['label'] = tensor_vstack([batch['label'] for batch in label_list], pad=-1)
 
 		self.data = [mx.nd.array(all_data['data'])]
-		# self.label = [mx.nd.array(all_label['label'])]
-		self.label = []
+		self.label = [mx.nd.array(all_label['label'])]
+		# self.label = []
 

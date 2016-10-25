@@ -60,4 +60,6 @@ def get_vgg19_conv(data):
     data=relu5_2, kernel=(3, 3), pad=(1, 1), num_filter=512, name="conv5_3")
     relu5_3 = mx.symbol.Activation(data=conv5_3, act_type="relu", name="relu5_3")
 
+    group = mx.symbol.Group([relu5_3,data])
+
     return relu5_3
